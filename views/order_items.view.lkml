@@ -14,6 +14,8 @@ view: order_items {
   }
   dimension: order_id {
     type: number
+    suggest_explore: orders
+    suggest_dimension: orders.id
     # hidden: yes
     sql: ${TABLE}.order_id ;;
   }
@@ -30,6 +32,7 @@ view: order_items {
     timeframes: [raw, time, date, week, month, quarter, year]
     sql: ${TABLE}.returned_at ;;
   }
+
   dimension: sale_price {
     type: number
     sql: ${TABLE}.sale_price ;;
