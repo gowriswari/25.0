@@ -1,5 +1,7 @@
 view: billion_orders {
+ # extends: [order_items]
   sql_table_name: demo_db.billion_orders ;;
+
 
   dimension: customer_id {
     type: string

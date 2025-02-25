@@ -33,9 +33,30 @@ view: order_items {
   dimension: sale_price {
     type: number
     sql: ${TABLE}.sale_price ;;
+
+  }
+  measure: test {
+    type: sum
+    sql: ${sale_price} ;;
   }
   measure: count {
     type: count
     drill_fields: [id, orders.id, inventory_items.id]
+  }
+  parameter: test_parameter {
+    type: unquoted
+    allowed_value: {
+      label: "sale price"
+      value: "sale_price"
+    }
+    allowed_value: {
+      label: "inventory_item_id"
+      value: "inventory_item_id"
+    }
+  }
+  measure: test_param_measure {
+    type: sum
+    sql: ${TABLE}.{% parameter test_parameter %} ;;
+
   }
 }

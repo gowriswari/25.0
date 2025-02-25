@@ -2,13 +2,22 @@ connection: "thelook"
 
 # include all the views
 include: "/views/**/*.view.lkml"
+include: "/views/native_derived_table_test.view.lkml"
 
 datagroup: gowri_1_default_datagroup {
-  # sql_trigger: SELECT MAX(id) FROM etl_log;;
+  sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "1 hour"
 }
-
+datagroup: gowri_test1 {
+  max_cache_age: "5 minutes"
+  sql_trigger: SELECT max(users.id) from demo_db.users ;;
+}
 persist_with: gowri_1_default_datagroup
+
+access_grant: explore_testing_ua {
+  user_attribute: users_2
+  allowed_values: ["users","orders","order_items"]
+}
 
 explore: billion_orders {
   join: orders {
@@ -47,9 +56,19 @@ explore: dummy {}
 explore: employees {}
 
 explore: events {
-  join: users {
+  #join: users {
+  #  type: left_outer
+  #  sql_on: ${events.user_id} = ${users.id} ;;
+   # relationship: many_to_one
+  #}
+  description: "Start here for Event analysis"
+  fields: [ALL_FIELDS*, -users.first_name]
+  from: events
+  view_name: events
+  extends: [check]
+  join: orders {
     type: left_outer
-    sql_on: ${events.user_id} = ${users.id} ;;
+    sql_on: ${events.user_id} = ${orders.id} ;;
     relationship: many_to_one
   }
 }
@@ -91,6 +110,7 @@ explore: hundred_million_orders {
 }
 
 explore: hundred_million_orders_wide {
+  #extension: required
   join: orders {
     type: left_outer
     sql_on: ${hundred_million_orders_wide.order_id} = ${orders.id} ;;
@@ -103,7 +123,16 @@ explore: hundred_million_orders_wide {
     relationship: many_to_one
   }
 }
-
+######## extension testing on explores with events explore extending with users view ####
+explore: check {
+  extension: required
+  join: users {
+    type: left_outer
+    sql_on: ${events.user_id}=${users.id} ;;
+    relationship: one_to_many
+  }
+}
+##############
 explore: incremental_pdts_test {}
 
 explore: ints {}
@@ -137,6 +166,7 @@ explore: orders {
 }
 
 explore: order_items {
+  required_access_grants: [explore_testing_ua]
   join: orders {
     type: left_outer
     sql_on: ${order_items.order_id} = ${orders.id} ;;
@@ -194,11 +224,15 @@ explore: pegdates {}
 
 explore: person {}
 
-explore: persons {}
+explore: persons {
+  #extends: [order_items]
+}
 
 explore: persons2 {}
 
-explore: products {}
+explore: products {
+ # extends: [order_items]
+}
 
 explore: salary {
   join: dept {
@@ -272,7 +306,12 @@ explore: test_space_in_column_name {}
 
 explore: thor {}
 
-explore: users {}
+explore: users {
+  access_filter: {
+    field: users.id
+    user_attribute: ids
+  }
+}
 
 explore: user_data {
   join: users {
@@ -281,6 +320,12 @@ explore: user_data {
     relationship: many_to_one
   }
 }
+explore: native_derived_table_test {
+
+}
+################ aggregate tables ############
+
+########################################
 
 explore: viet {}
 
