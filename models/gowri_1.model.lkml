@@ -96,7 +96,7 @@ explore: foo {}
 explore: human {}
 
 explore: hundred_million_orders {
-  required_access_grants: [explore_testing_ua]
+
   join: orders {
     type: left_outer
     sql_on: ${hundred_million_orders.order_id} = ${orders.id} ;;
@@ -108,6 +108,7 @@ explore: hundred_million_orders {
     sql_on: ${orders.user_id} = ${users.id} ;;
     relationship: many_to_one
   }
+  required_access_grants: [explore_testing_ua]
 }
 
 explore: hundred_million_orders_wide {
