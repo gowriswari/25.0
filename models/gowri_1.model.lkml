@@ -4,15 +4,15 @@ connection: "thelook"
 include: "/views/**/*.view.lkml"
 include: "/views/native_derived_table_test.view.lkml"
 
-datagroup: gowri_1_default_datagroup {
-  sql_trigger: SELECT MAX(id) FROM etl_log;;
-  max_cache_age: "1 hour"
-}
-datagroup: gowri_test1 {
-  max_cache_age: "5 minutes"
-  sql_trigger: SELECT max(users.id) from demo_db.users ;;
-}
-persist_with: gowri_1_default_datagroup
+#datagroup: gowri_1_default_datagroup {
+ # sql_trigger: SELECT MAX(id) FROM etl_log;;
+ # max_cache_age: "1 hour"
+#}
+#datagroup: gowri_test1 {
+#  max_cache_age: "5 minutes"
+#  sql_trigger: SELECT max(users.id) from demo_db.users ;;
+#}
+#persist_with: gowri_1_default_datagroup
 
 access_grant: explore_testing_ua {
   user_attribute: users_2
@@ -168,7 +168,7 @@ explore: orders {
 }
 
 explore: order_items {
-  required_access_grants: [explore_testing_ua]
+ # required_access_grants: [explore_testing_ua]
   join: orders {
     type: left_outer
     sql_on: ${order_items.order_id} = ${orders.id} ;;
