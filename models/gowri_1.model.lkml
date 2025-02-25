@@ -16,7 +16,7 @@ persist_with: gowri_1_default_datagroup
 
 access_grant: explore_testing_ua {
   user_attribute: users_2
-  allowed_values: ["users"]
+  allowed_values: [ "users" ]
 }
 explore: billion_orders {
   join: orders {
