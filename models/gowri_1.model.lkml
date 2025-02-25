@@ -16,10 +16,10 @@ persist_with: gowri_1_default_datagroup
 
 access_grant: explore_testing_ua {
   user_attribute: users_2
-  allowed_values: ["users", "orders"]
+  allowed_values: ["users"]
 }
-
 explore: billion_orders {
+  required_access_grants: [explore_testing_ua]
   join: orders {
     type: left_outer
     sql_on: ${billion_orders.order_id} = ${orders.id} ;;
@@ -108,7 +108,7 @@ explore: hundred_million_orders {
     sql_on: ${orders.user_id} = ${users.id} ;;
     relationship: many_to_one
   }
-  required_access_grants: [explore_testing_ua]
+
 }
 
 explore: hundred_million_orders_wide {
